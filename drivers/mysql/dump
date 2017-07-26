@@ -1,0 +1,5 @@
+#!/bin/sh
+
+mkdir -p /data/dumps
+
+mysqldump -h {{.Env.IP}} --user={{.Env.USERNAME}} --password={{.Env.PASSWORD}} --all-databases > /data/dumps/{{.Env.ID}}

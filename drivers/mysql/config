@@ -1,0 +1,7 @@
+driver: mysql
+image: mysql:latest
+id: {{.Env.ID}}
+ip: {{.Env.IP}}
+username: {{if getenv "MYSQL_USER"}}{{.Env.MYSQL_USER}}{{else}}root{{end}}
+password: {{if getenv "MYSQL_PASSWORD"}}{{.Env.MYSQL_PASSWORD}}{{else}}{{.Env.MYSQL_ROOT_PASSWORD}}{{end}}
+schedule: {{.Env.SCHEDULE}}

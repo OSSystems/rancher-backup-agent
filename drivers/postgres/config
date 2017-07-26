@@ -1,0 +1,7 @@
+driver: postgres
+image: postgres:latest
+id: {{.Env.ID}}
+ip: {{.Env.IP}}
+username: {{.Env.POSTGRES_USER}}
+password: {{.Env.POSTGRES_PASSWORD}}
+schedule: {{.Env.SCHEDULE}}

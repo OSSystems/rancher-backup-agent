@@ -1,0 +1,5 @@
+#!/bin/sh
+
+mkdir -p /data/dumps
+
+PGPASSWORD=${PASSWORD} pg_dump -h ${IP} -U ${USERNAME} -d ${USERNAME} -f /data/dumps/${ID}.dump
