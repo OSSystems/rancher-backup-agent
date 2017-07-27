@@ -16,6 +16,9 @@ get_containers() {
         jq -r '. as $parent | { id: $parent.id, driver: $parent.labels["br.com.ossystems.rancher.backup.driver"], ip: $parent.primaryIpAddress, env: $parent.environment, schedule: $parent.labels["br.com.ossystems.rancher.backup.schedule"] }'
 }
 
+# Register storage service
+mc config host add s3 $S3_URL $S3_ACCESS_KEY $S3_SECRET_KEY
+
 export RANCHER_ACCESS_KEY=$CATTLE_ACCESS_KEY
 export RANCHER_SECRET_KEY=$CATTLE_SECRET_KEY
 export RANCHER_URL=$CATTLE_URL

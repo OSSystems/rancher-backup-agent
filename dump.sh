@@ -26,10 +26,15 @@ DUMP_SCRIPT=$(mktemp -p /data)
 gomplate -f drivers/${DRIVER}/dump > ${DUMP_SCRIPT}
 chmod +x ${DUMP_SCRIPT}
 
+DUMP_FILE="/data/dumps/$(date +%s%N)"
+
 docker run \
        --rm \
        -v /data/dumps:/data/dumps \
        -v ${DUMP_SCRIPT}:/usr/local/bin/dump \
+       -e DUMP_FILE="${DUMP_FILE}" \
        --entrypoint /usr/local/bin/dump ${IMAGE}
 
 rm -f ${DUMP_SCRIPT}
+
+mc --quiet cp ${DUMP_FILE} s3/${S3_BUCKET}
