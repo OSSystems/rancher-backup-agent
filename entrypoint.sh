@@ -12,8 +12,8 @@
 # }
 get_containers() {
     rancher ps -c --format json | \
-        jq -r '.Container as $parent | select($parent.labels | .["br.com.ossystems.rancher.backup.driver"]) | $parent' | \
-        jq -r '. as $parent | { id: $parent.id, driver: $parent.labels["br.com.ossystems.rancher.backup.driver"], ip: $parent.primaryIpAddress, env: $parent.environment, schedule: $parent.labels["br.com.ossystems.rancher.backup.schedule"] }'
+        jq -r -f filters/get_containers.jq | \
+        jq -r -f filters/create_container_object.jq
 }
 
 # Register storage service
