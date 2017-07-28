@@ -6,6 +6,7 @@
 # {
 #   id: <container-id>,
 #   ip: <container-ip-address>,
+#   name: <container-name>,
 #   driver: <value-of-br.com.ossystems.rancher.backup.driver>,
 #   env: <container-environment-variables>,
 #   schedule: <cron-schedule-line>
@@ -30,10 +31,11 @@ for ID in $(echo "${CONTAINERS}" | jq -r '.id'); do
     CONTAINER=$(echo "${CONTAINERS}" | jq -r "select(.id == \"${ID}\")")
     DRIVER=$(echo "${CONTAINER}" | jq -r "select(.id == \"${ID}\") | .driver")
     IP=$(echo "${CONTAINER}" | jq -r "select(.id == \"${ID}\") | .ip")
+    NAME=$(echo "${CONTAINER}" | jq -r "select(.id == \"${ID}\") | .name")
     SCHEDULE=$(echo "${CONTAINER}" | jq -r "select(.id == \"${ID}\") | .schedule")
 
     # Environment variables which will be interpolated in driver template
-    ENVIRONMENT="ID='${ID}' IP='${IP}' SCHEDULE='${SCHEDULE}'"
+    ENVIRONMENT="ID='${ID}' IP='${IP}' NAME='${NAME}' SCHEDULE='${SCHEDULE}'"
     for ENV in $(echo $CONTAINER | jq -r ".env | to_entries[] | .key"); do
         ENVIRONMENT="$ENVIRONMENT $ENV=$(echo $CONTAINER | jq -r ".env[\"${ENV}\"]")"
     done

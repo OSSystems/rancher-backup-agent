@@ -12,6 +12,7 @@ ID=$(echo "${CONFIG}" | jq -r '.id')
 IP=$(echo "${CONFIG}" | jq -r '.ip')
 DRIVER=$(echo "${CONFIG}" | jq -r '.driver')
 IMAGE=$(echo "${CONFIG}" | jq -r '.image')
+NAME=$(echo "${CONFIG}" | jq -r '.name')
 USERNAME=$(echo "${CONFIG}" | jq -r '.username')
 PASSWORD=$(echo "${CONFIG}" | jq -r '.password')
 
@@ -26,7 +27,7 @@ DUMP_SCRIPT=$(mktemp -p /data)
 gomplate -f drivers/${DRIVER}/dump > ${DUMP_SCRIPT}
 chmod +x ${DUMP_SCRIPT}
 
-DUMP_FILE="/data/dumps/$(date +%s%N)"
+DUMP_FILE="/data/dumps/${NAME}_$(date +%s%N)"
 
 docker run \
        --rm \

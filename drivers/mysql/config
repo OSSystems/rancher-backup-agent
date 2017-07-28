@@ -1,4 +1,5 @@
 driver: mysql
+name: {{.Env.NAME}}
 image: mysql:latest
 id: {{.Env.ID}}
 ip: {{.Env.IP}}
