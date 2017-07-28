@@ -1,5 +1,3 @@
 #!/bin/sh
 
-mkdir -p /data/dumps
-
 mysqldump -h {{.Env.IP}} --user={{.Env.USERNAME}} --password={{.Env.PASSWORD}} --all-databases > ${DUMP_FILE}
