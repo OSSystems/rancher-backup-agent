@@ -1,4 +1,5 @@
 driver: postgres
+name: {{.Env.NAME}}
 image: postgres:latest
 id: {{.Env.ID}}
 ip: {{.Env.IP}}
