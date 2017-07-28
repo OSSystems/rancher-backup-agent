@@ -29,6 +29,8 @@ chmod +x ${DUMP_SCRIPT}
 
 DUMP_FILE="/data/dumps/${NAME}_$(date +%s%N)"
 
+mkdir -p /data/dumps
+
 docker run \
        --rm \
        -v /data/dumps:/data/dumps \
