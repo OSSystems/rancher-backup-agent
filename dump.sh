@@ -40,4 +40,4 @@ docker run \
 
 rm -f ${DUMP_SCRIPT}
 
-mc --quiet cp ${DUMP_FILE} s3/${S3_BUCKET}
+[ -f "${DUMP_FILE}" ] && mc --quiet cp ${DUMP_FILE} s3/${S3_BUCKET}
