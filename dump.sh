@@ -8,18 +8,14 @@ yaml_to_json() {
 }
 
 CONFIG=$(yaml_to_json "$(cat $PLAN_DIR/config)")
-ID=$(echo "${CONFIG}" | jq -r '.id')
-IP=$(echo "${CONFIG}" | jq -r '.ip')
-DRIVER=$(echo "${CONFIG}" | jq -r '.driver')
-IMAGE=$(echo "${CONFIG}" | jq -r '.image')
-NAME=$(echo "${CONFIG}" | jq -r '.name')
-USERNAME=$(echo "${CONFIG}" | jq -r '.username')
-PASSWORD=$(echo "${CONFIG}" | jq -r '.password')
+CONFIG_KEYS=$(echo "${CONFIG}" | jq -r 'to_entries[] | .key')
 
-export ID
-export IP
-export USERNAME
-export PASSWORD
+for KEY in $CONFIG_KEYS; do
+    VAR=$(echo "${KEY}" |  tr '[:lower:]' '[:upper:]')
+
+    eval "$VAR"=$(echo "${CONFIG}" | jq -r ".${KEY} // empty")
+    export "${VAR}"
+done
 
 docker pull ${IMAGE}
 
