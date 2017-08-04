@@ -1,0 +1,8 @@
+driver: dobs
+name: {{.Env.NAME}}
+image: gustavosbarreto/doctl:v1.7.0
+id: {{.Env.ID}}
+ip: {{.Env.IP}}
+schedule: {{.Env.SCHEDULE}}
+digitalocean_access_token: {{.ENV.DIGITALOCEAN_ACCESS_TOKEN}}
+volume: {{.Env.VOLUME}}
