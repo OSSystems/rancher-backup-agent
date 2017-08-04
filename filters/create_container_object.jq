@@ -4,5 +4,6 @@
     name: $parent.name,
     ip: $parent.primaryIpAddress,
     env: $parent.environment,
+    labels: $parent.labels,
     schedule: $parent.labels["br.com.ossystems.rancher.backup.schedule"]
   }

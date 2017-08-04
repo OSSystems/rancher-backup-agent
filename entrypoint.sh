@@ -9,6 +9,7 @@
 #   name: <container-name>,
 #   driver: <value-of-br.com.ossystems.rancher.backup.driver>,
 #   env: <container-environment-variables>,
+#   labels: <container-labels>,
 #   schedule: <cron-schedule-line>
 # }
 get_containers() {
@@ -38,6 +39,12 @@ for ID in $(echo "${CONTAINERS}" | jq -r '.id'); do
     ENVIRONMENT="ID='${ID}' IP='${IP}' NAME='${NAME}' SCHEDULE='${SCHEDULE}'"
     for ENV in $(echo $CONTAINER | jq -r ".env | to_entries[] | .key"); do
         ENVIRONMENT="$ENVIRONMENT $ENV=$(echo $CONTAINER | jq -r ".env[\"${ENV}\"]")"
+    done
+
+    for LABEL in $(echo $CONTAINER | jq -r ".labels | to_entries[] | .key"); do
+        echo "${LABEL}" | grep -q -v -F "br.com.ossystems.rancher.backup.${DRIVER}." && continue
+        VAR=$(echo "${LABEL}" | sed "s,br.com.ossystems.rancher.backup.${DRIVER}.,,g")
+        ENVIRONMENT="$ENVIRONMENT $VAR=$(echo $CONTAINER | jq -r ".labels[\"${LABEL}\"]")"
     done
 
     [ ! -f drivers/${DRIVER}/config ] && continue
