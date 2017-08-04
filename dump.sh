@@ -23,7 +23,8 @@ DUMP_SCRIPT=$(mktemp -p /data)
 gomplate -f drivers/${DRIVER}/dump > ${DUMP_SCRIPT}
 chmod +x ${DUMP_SCRIPT}
 
-DUMP_FILE="/data/dumps/${NAME}_$(date +%s%N)"
+DUMP_ID="${NAME}_$(date +%s%N)"
+DUMP_FILE="/data/dumps/${DUMP_ID}"
 
 mkdir -p /data/dumps
 
@@ -31,6 +32,7 @@ docker run \
        --rm \
        -v /data/dumps:/data/dumps \
        -v ${DUMP_SCRIPT}:/usr/local/bin/dump \
+       -e DUMP_ID="${DUMP_ID}" \
        -e DUMP_FILE="${DUMP_FILE}" \
        --entrypoint /usr/local/bin/dump ${IMAGE}
 
