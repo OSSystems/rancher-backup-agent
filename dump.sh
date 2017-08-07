@@ -30,6 +30,8 @@ mkdir -p /data/dumps
 
 docker run \
        --rm \
+       -l io.rancher.container.network=true \
+       --net=host \
        -v /data/dumps:/data/dumps \
        -v ${DUMP_SCRIPT}:/usr/local/bin/dump \
        -e DUMP_ID="${DUMP_ID}" \
