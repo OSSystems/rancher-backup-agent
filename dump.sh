@@ -13,7 +13,7 @@ CONFIG_KEYS=$(echo "${CONFIG}" | jq -r 'to_entries[] | .key')
 for KEY in $CONFIG_KEYS; do
     VAR=$(echo "${KEY}" |  tr '[:lower:]' '[:upper:]')
 
-    eval "$VAR"=$(echo "${CONFIG}" | jq -r ".${KEY} // empty")
+    eval "$VAR='$(echo "${CONFIG}" | jq -r ".${KEY} // empty")'"
     export "${VAR}"
 done
 

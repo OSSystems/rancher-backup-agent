@@ -43,7 +43,7 @@ for ID in $(echo "${CONTAINERS}" | jq -r '.id'); do
 
     for LABEL in $(echo $CONTAINER | jq -r ".labels | to_entries[] | .key"); do
         echo "${LABEL}" | grep -q -v -F "br.com.ossystems.rancher.backup.${DRIVER}." && continue
-        VAR=$(echo "${LABEL}" | sed "s,br.com.ossystems.rancher.backup.${DRIVER}.,,g")
+        VAR=$(echo "${LABEL}" | sed "s,br.com.ossystems.rancher.backup.${DRIVER}.,,g" | tr '[:lower:]' '[:upper:]')
         ENVIRONMENT="$ENVIRONMENT $VAR=$(echo $CONTAINER | jq -r ".labels[\"${LABEL}\"]")"
     done
 
