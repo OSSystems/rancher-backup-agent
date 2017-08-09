@@ -1,6 +1,6 @@
 driver: dobs
 name: {{.Env.NAME}}
-image: gustavosbarreto/doctl:v1.7.0
+image: ossystems/doctl:v1.7.0
 id: {{.Env.ID}}
 ip: {{.Env.IP}}
 schedule: {{.Env.SCHEDULE}}
