@@ -10,11 +10,15 @@ yaml_to_json() {
 CONFIG=$(yaml_to_json "$(cat $PLAN_DIR/config)")
 CONFIG_KEYS=$(echo "${CONFIG}" | jq -r 'to_entries[] | .key')
 
+ENV_FILE=$(mktemp)
+
 for KEY in $CONFIG_KEYS; do
     VAR=$(echo "${KEY}" |  tr '[:lower:]' '[:upper:]')
 
     eval "$VAR='$(echo "${CONFIG}" | jq -r ".${KEY} // empty")'"
     export "${VAR}"
+
+    echo "$VAR=$(echo "${CONFIG}" | jq -r ".${KEY} // empty")" >> $ENV_FILE
 done
 
 docker pull ${IMAGE}
@@ -26,6 +30,9 @@ chmod +x ${DUMP_SCRIPT}
 DUMP_ID="${NAME}_$(date +%s%N)"
 DUMP_FILE="/data/dumps/${DUMP_ID}"
 
+echo "DUMP_ID=${DUMP_ID}" >> $ENV_FILE
+echo "DUMP_FILE=${DUMP_FILE}" >> $ENV_FILE
+
 mkdir -p /data/dumps
 
 docker run \
@@ -34,10 +41,10 @@ docker run \
        --net=host \
        -v /data/dumps:/data/dumps \
        -v ${DUMP_SCRIPT}:/usr/local/bin/dump \
-       -e DUMP_ID="${DUMP_ID}" \
-       -e DUMP_FILE="${DUMP_FILE}" \
+       --env-file "${ENV_FILE}" \
        --entrypoint /usr/local/bin/dump ${IMAGE}
 
 rm -f ${DUMP_SCRIPT}
+rm -f ${ENV_FILE}
 
 [ -f "${DUMP_FILE}" ] && mc --quiet cp ${DUMP_FILE} s3/${S3_BUCKET}

@@ -1,7 +1,5 @@
 #!/bin/sh
 
-export DIGITALOCEAN_ACCESS_TOKEN="{{.Env.DIGITALOCEAN_ACCESS_TOKEN}}"
-
 VOLUME="$(./doctl compute volume list | grep {{.Env.VOLUME}} | cut -d' ' -f1)"
 
 ./doctl compute volume snapshot $VOLUME --snapshot-name ${DUMP_ID}
