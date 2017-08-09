@@ -4,5 +4,5 @@ image: gustavosbarreto/doctl:v1.7.0
 id: {{.Env.ID}}
 ip: {{.Env.IP}}
 schedule: {{.Env.SCHEDULE}}
-digitalocean_access_token: {{.Env.DIGITALOCEAN_ACCESS_TOKEN}}
 volume: {{.Env.VOLUME}}
+digitalocean_access_token: {{.Env.DIGITALOCEAN_ACCESS_TOKEN}}

@@ -18,6 +18,12 @@ get_containers() {
         jq -r -f filters/create_container_object.jq
 }
 
+get_service_env() {
+    SERVICE=$(echo $1 | cut -d : -f 1)
+    ENV=$(echo $1 | cut -d : -f 2)
+    rancher ps -a -s --format json | jq -r ".Service | select(.name == \"${SERVICE}\") | .launchConfig.environment[\"${ENV}\"] // empty"
+}
+
 # Register storage service
 mc config host add s3 $S3_URL $S3_ACCESS_KEY $S3_SECRET_KEY
 
@@ -44,7 +50,14 @@ for ID in $(echo "${CONTAINERS}" | jq -r '.id'); do
     for LABEL in $(echo $CONTAINER | jq -r ".labels | to_entries[] | .key"); do
         echo "${LABEL}" | grep -q -v -F "br.com.ossystems.rancher.backup.${DRIVER}." && continue
         VAR=$(echo "${LABEL}" | sed "s,br.com.ossystems.rancher.backup.${DRIVER}.,,g" | tr '[:lower:]' '[:upper:]')
-        ENVIRONMENT="$ENVIRONMENT $VAR=$(echo $CONTAINER | jq -r ".labels[\"${LABEL}\"]")"
+
+        if echo "${VAR}" | grep -q ":ENV$"; then
+            VAR=$(echo "${VAR}" | sed 's,:.*,,g')
+            VALUE="$(get_service_env $(echo $CONTAINER | jq -r ".labels[\"${LABEL}\"]"))"
+            ENVIRONMENT="$ENVIRONMENT $VAR=$VALUE"
+        else
+            ENVIRONMENT="$ENVIRONMENT $VAR=$(echo $CONTAINER | jq -r ".labels[\"${LABEL}\"]")"
+        fi
     done
 
     [ ! -f drivers/${DRIVER}/config ] && continue
