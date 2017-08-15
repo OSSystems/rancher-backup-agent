@@ -1,5 +1,13 @@
 #!/bin/sh
 
-VOLUME="$(./doctl compute volume list | grep {{.Env.VOLUME}} | cut -d' ' -f1)"
+get_volume() {
+    VOLUME="$(./doctl compute volume list | grep {{.Env.VOLUME}} | cut -d' ' -f1)"
+}
 
-./doctl compute volume snapshot $VOLUME --snapshot-name ${DUMP_ID}
+for i in $(seq 1 10); do
+    [ -z "${VOLUME}" ] && get_volume
+done
+
+for i in $(seq 1 10); do
+    ./doctl compute volume snapshot $VOLUME --snapshot-name ${DUMP_ID} && break
+done
