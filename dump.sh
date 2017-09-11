@@ -48,3 +48,4 @@ rm -f ${DUMP_SCRIPT}
 rm -f ${ENV_FILE}
 
 [ -f "${DUMP_FILE}" ] && mc --quiet cp ${DUMP_FILE} s3/${S3_BUCKET}
+[ -f "${DUMP_FILE}" ] && rm -rf ${DUMP_FILE}
