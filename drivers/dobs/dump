@@ -8,6 +8,8 @@ for i in $(seq 1 10); do
     [ -z "${VOLUME_ID}" ] && set_volume_id
 done
 
+echo "Creating snapshot ${DUMP_ID} for volume {{.Env.VOLUME}} (${VOLUME_ID})"
+
 for i in $(seq 1 10); do
     ./doctl compute volume snapshot $VOLUME_ID --snapshot-name ${DUMP_ID} && break
 done
